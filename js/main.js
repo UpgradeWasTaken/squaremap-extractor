@@ -11,9 +11,9 @@ const CONFIG = {
   // Which tile files to show, by the x_z index in the tile filenames
   // (tiles/<world>/<lockedZoom>/<x>_<z>.png). Both ends are inclusive.
   tiles: {
-    minX: 117,
+    minX: 111,
     maxX: 125,
-    minZ: 49,
+    minZ: 37,
     maxZ: 62,
   },
 };
