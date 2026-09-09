@@ -4,17 +4,20 @@ const CONFIG = {
   world: "minecraft_overworld",
   tileSize: 512,
 
-  // squaremap's native (most zoomed-in) level — confirmed empirically:
-  // tile 111_37 at zoom 5 starts exactly at block (56832, 18944), i.e.
-  // 111 * 512 == 56832 and 37 * 512 == 18944, so 1 block == 1 pixel at
+  // squaremap's native (most zoomed-in) level. Confirmed against the
+  // top-left tile at each zoom (they halve cleanly, as expected):
+  //   zoom 5: 104_32   zoom 4: 52_16   zoom 3: 26_8   zoom 2: 13_4
+  // 104 * 512 == 53248 and 32 * 512 == 16384 -> 1 block == 1 pixel at
   // zoom 5. Every zoom below that halves resolution (2x blocks/pixel).
   nativeZoom: 5,
   minZoom: 2,
   maxZoom: 5,
 
-  // The section to display, as Minecraft block coordinates.
-  topLeft: { x: 56832, z: 18944 },
-  bottomRight: { x: 64512, z: 32256 },
+  // The section to display, as Minecraft block coordinates. topLeft is
+  // exactly the zoom-5 tile 104_32 (104*512, 32*512); bottomRight keeps
+  // the same span as before, just re-anchored to the corrected origin.
+  topLeft: { x: 53248, z: 16384 },
+  bottomRight: { x: 60928, z: 29696 },
 };
 // -------------------------------------------------------
 
@@ -46,4 +49,4 @@ layer.addTo(map);
 map.setMaxBounds(bounds);
 map.fitBounds(bounds);
 
-loadTownBorders(map, CONFIG.mapBaseUrl, CONFIG.world, bounds);
+loadTownBorders(map, "data/markers.json", bounds);

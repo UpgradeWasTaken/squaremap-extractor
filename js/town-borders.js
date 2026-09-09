@@ -1,26 +1,28 @@
-// Overlays live town-claim borders from squaremap's marker API as thin
-// dotted gray outlines with centered name labels, similar to how Google
-// Maps renders subnational region borders.
+// Overlays town-claim borders as thin dotted gray outlines with centered
+// name labels, similar to how Google Maps renders subnational region
+// borders. Reads from a local markers.json snapshot (data/markers.json)
+// rather than fetching squaremap's live endpoint directly, since that
+// endpoint doesn't send CORS headers for cross-origin fetches from a
+// separately hosted site. Update data/markers.json to refresh the data.
 //
-// Schema (confirmed from a real markers.json sample): the endpoint returns
-// an array of marker sets ({id, name, markers: [...]}); the "towny" set
-// holds per-town markers of type "polygon" or "icon". A polygon marker's
-// `points` is Array<part> -> Array<ring> -> Array<{x, z}>: each part is a
-// separate (possibly disjoint) shape, and within a part the first ring is
-// the outer boundary with any further rings as holes (annexed enclaves).
-async function loadTownBorders(map, mapBaseUrl, world, cullBounds) {
-  const url = `${mapBaseUrl}/tiles/${world}/markers.json`;
+// Schema (confirmed from a real markers.json sample): it's an array of
+// marker sets ({id, name, markers: [...]}); the "towny" set holds per-town
+// markers of type "polygon" or "icon". A polygon marker's `points` is
+// Array<part> -> Array<ring> -> Array<{x, z}>: each part is a separate
+// (possibly disjoint) shape, and within a part the first ring is the outer
+// boundary with any further rings as holes (annexed enclaves).
+async function loadTownBorders(map, markersUrl, cullBounds) {
   let markerSets;
   try {
-    markerSets = await (await fetch(url)).json();
+    markerSets = await (await fetch(markersUrl)).json();
   } catch (err) {
-    console.error("Failed to load town borders from", url, err);
+    console.error("Failed to load town borders from", markersUrl, err);
     return;
   }
 
   const townySet = markerSets.find((set) => set.id === "towny");
   if (!townySet) {
-    console.error('No "towny" marker set found in', url);
+    console.error('No "towny" marker set found in', markersUrl);
     return;
   }
 
