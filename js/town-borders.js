@@ -66,7 +66,7 @@ async function loadTownBorders(map, options) {
     labelLayers.push({
       layer: createLabel(
         blockToLatLng(center.x, center.z),
-        escapeHtml(info.displayName || groupName),
+        escapeHtml(info.displayName || prettifyName(groupName)),
         "map-label town-label"
       ),
       minZoom: minZoomForArea(totalArea, labels.townMinArea),
@@ -201,6 +201,13 @@ function extractName(marker) {
   const match = source.match(/<b>([^<]+)<\/b>/i);
   const raw = match ? match[1] : source.replace(/<[^>]*>/g, " ");
   return raw.replace(/\s+/g, " ").trim();
+}
+
+// Towny forbids spaces in town names, so multi-word names arrive as
+// "Bay_Of_Plenty". Applies only to names read from the squaremap export —
+// anything written by hand in town-data.json is shown as typed.
+function prettifyName(name) {
+  return name.replace(/_/g, " ");
 }
 
 // Town names are player-supplied, so they never reach innerHTML unescaped.
