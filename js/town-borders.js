@@ -37,11 +37,11 @@ async function loadTownBorders(map, markersUrl, cullBounds) {
     for (const part of marker.points) {
       const rings = part.map((ring) => ring.map((pt) => blockToLatLng(pt.x, pt.z)));
       const polygon = L.polygon(rings, {
-        color: "#888888",
-        weight: 1.5,
-        opacity: 0.85,
+        color: "#7a7a7a",
+        weight: 2.5,
+        opacity: 1,
         fill: false,
-        dashArray: "2 6",
+        dashArray: "3 5",
         interactive: false,
       });
 
