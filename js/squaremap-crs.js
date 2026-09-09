@@ -16,8 +16,11 @@ function createSquaremapCRS(nativeZoom) {
   return L.extend({}, L.CRS.Simple, {
     // Maps Minecraft (x, z) -> Leaflet's internal point space at zoom 0.
     // L.latLng is used as (z, x) — i.e. lat holds Minecraft Z, lng holds X —
-    // which is the convention squaremap itself uses.
-    transformation: new L.Transformation(scale, 0, -scale, 0),
+    // which is the convention squaremap itself uses. Both axes increase in
+    // the same direction as pixel space (no flip): confirmed against a
+    // known tile/block pair — tile 111_37 at zoom 5 starts exactly at
+    // block (56832, 18944), i.e. 111*512 == 56832 and 37*512 == 18944.
+    transformation: new L.Transformation(scale, 0, scale, 0),
   });
 }
 
