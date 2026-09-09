@@ -7,6 +7,13 @@
   <style>
     html, body, #map { height: 100%; margin: 0; background: #1a1a1a; }
 
+    /* Zoom 6 and 7 upscale the zoom-5 tiles; keep the blocks sharp-edged
+       instead of letting the browser smooth them. */
+    .leaflet-tile {
+      image-rendering: crisp-edges;
+      image-rendering: pixelated;
+    }
+
     /* Google-Maps-style subnational-border label: plain text, no bubble. */
     .map-label {
       background: transparent !important;

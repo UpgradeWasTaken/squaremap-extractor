@@ -9,9 +9,12 @@ const CONFIG = {
   //   zoom 5: 104_32   zoom 4: 52_16   zoom 3: 26_8
   // 104 * 512 == 53248 and 32 * 512 == 16384 -> 1 block == 1 pixel at
   // zoom 5. Every zoom below that halves resolution (2x blocks/pixel).
+  // Zooms 6 and 7 have no tiles on the server: they're the zoom-5 tiles
+  // scaled 2x and 4x, upscaled with nearest-neighbour (see the
+  // .leaflet-tile rule in index.html) to keep the pixel art crisp.
   nativeZoom: 5,
   minZoom: 2,
-  maxZoom: 5,
+  maxZoom: 7,
 
   // The section to display, as inclusive tile x_z ranges per zoom level.
   // These aren't a single block-coordinate box scaled across zooms: at
@@ -63,17 +66,25 @@ function tileRangeBounds(zoom, { topLeft, bottomRight }) {
   );
 }
 
+// Zooms past nativeZoom show the same tiles scaled up, so they cover the
+// same world area and reuse the native level's bounds.
+function boundsForZoom(zoom) {
+  const tiledZoom = Math.min(zoom, CONFIG.nativeZoom);
+  return tileRangeBounds(tiledZoom, CONFIG.zoomTileBounds[tiledZoom]);
+}
+
 // maxBounds/tile bounds are zoom-specific (see zoomTileBounds above), so
 // they're recalculated every time the zoom level changes.
 function applyBoundsForZoom(zoom) {
-  const bounds = tileRangeBounds(zoom, CONFIG.zoomTileBounds[zoom]);
+  const bounds = boundsForZoom(zoom);
   map.setMaxBounds(bounds);
   layer.options.bounds = bounds;
   return bounds;
 }
 
-const initialBounds = applyBoundsForZoom(CONFIG.maxZoom);
-map.setView(initialBounds.getCenter(), CONFIG.maxZoom);
+// Opens at the native level; 6 and 7 are there to zoom into, not to land on.
+const initialBounds = applyBoundsForZoom(CONFIG.nativeZoom);
+map.setView(initialBounds.getCenter(), CONFIG.nativeZoom);
 map.on("zoomend", () => applyBoundsForZoom(map.getZoom()));
 
 // Cull the border overlay against the widest (zoom 5) extent, since every
@@ -81,6 +92,6 @@ map.on("zoomend", () => applyBoundsForZoom(map.getZoom()));
 loadTownBorders(map, {
   markersUrl: "data/markers.json",
   townDataUrl: "data/town-data.json",
-  cullBounds: tileRangeBounds(5, CONFIG.zoomTileBounds[5]),
+  cullBounds: boundsForZoom(CONFIG.nativeZoom),
   labels: CONFIG.labels,
 });
