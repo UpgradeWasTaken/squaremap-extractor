@@ -8,6 +8,12 @@ const CONFIG = {
   // disabled, so only tiles at this zoom are ever requested.
   lockedZoom: 5,
 
+  // squaremap's most zoomed-in ("native") level, i.e. 1 block == 1 pixel.
+  // Only used to place the town-border overlay correctly on top of the
+  // tiles — check <mapBaseUrl>/tiles/settings.json (zoom.max) if borders
+  // don't line up with the map beneath them.
+  nativeZoom: 5,
+
   // Which tile files to show, by the x_z index in the tile filenames
   // (tiles/<world>/<lockedZoom>/<x>_<z>.png). Both ends are inclusive.
   tiles: {
@@ -23,6 +29,7 @@ const { crs, layer } = createSquaremapTileLayer(CONFIG.mapBaseUrl, CONFIG.world,
   tileSize: CONFIG.tileSize,
   minZoom: CONFIG.lockedZoom,
   maxZoom: CONFIG.lockedZoom,
+  nativeZoom: CONFIG.nativeZoom,
 });
 
 const map = L.map("map", {
@@ -54,3 +61,5 @@ layer.addTo(map);
 
 map.setMaxBounds(bounds);
 map.fitBounds(bounds);
+
+loadTownBorders(map, CONFIG.mapBaseUrl, CONFIG.world);
