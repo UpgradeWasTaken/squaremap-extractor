@@ -1,0 +1,18 @@
+{
+  "NZ": {
+    "adjacentTowns": [ "Embassy" ],
+    "displayName": "NZ City",
+    "subdivisions": {
+      "Ostsubengrad": {
+        "coordinates": [60077, 25434]
+      },
+      "Willage": {
+        "coordinates": [59903, 25465],
+        "otherNames": ["Westsubengrad"]
+      },
+      "Embassy": {
+        "coordinates": [60209, 25732]
+      }
+    }
+  }
+}

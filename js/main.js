@@ -24,6 +24,14 @@ const CONFIG = {
     3: { topLeft: { x: 26, z: 8 }, bottomRight: { x: 31, z: 15 } },
     2: { topLeft: { x: 13, z: 5 }, bottomRight: { x: 15, z: 7 } },
   },
+
+  labels: {
+    // Smallest claim (in blocks²) that earns a name at each zoom, so only
+    // the big towns are labelled zoomed out and the rest fill in as you
+    // zoom in. 51200 blocks² is 200 chunks; the median town here is ~28.
+    townMinArea: { 2: 51200, 3: 25600, 4: 7680, 5: 0 },
+    subdivisionMinZoom: 4,
+  },
 };
 // -------------------------------------------------------
 
@@ -70,4 +78,9 @@ map.on("zoomend", () => applyBoundsForZoom(map.getZoom()));
 
 // Cull the border overlay against the widest (zoom 5) extent, since every
 // other zoom's area is a subset of it.
-loadTownBorders(map, "data/markers.json", tileRangeBounds(5, CONFIG.zoomTileBounds[5]));
+loadTownBorders(map, {
+  markersUrl: "data/markers.json",
+  townDataUrl: "data/town-data.json",
+  cullBounds: tileRangeBounds(5, CONFIG.zoomTileBounds[5]),
+  labels: CONFIG.labels,
+});

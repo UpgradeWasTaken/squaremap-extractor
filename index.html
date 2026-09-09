@@ -8,20 +8,38 @@
     html, body, #map { height: 100%; margin: 0; background: #1a1a1a; }
 
     /* Google-Maps-style subnational-border label: plain text, no bubble. */
-    .town-label {
+    .map-label {
       background: transparent !important;
       border: none !important;
       box-shadow: none !important;
       padding: 0 !important;
-      color: #ccc;
-      font: 600 11px/1.2 "Segoe UI", sans-serif;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
+      text-align: center;
       text-shadow: 0 0 3px #000, 0 0 3px #000, 0 0 3px #000;
       white-space: nowrap;
       pointer-events: none;
     }
-    .town-label::before { display: none !important; }
+    .map-label::before { display: none !important; }
+
+    .town-label {
+      color: #ccc;
+      font: 600 11px/1.2 "Segoe UI", sans-serif;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* Subdivisions sit inside a town, so they read one step quieter. */
+    .subdivision-label {
+      color: #b8b8b8;
+      font: 500 9px/1.2 "Segoe UI", sans-serif;
+      letter-spacing: 0.3px;
+    }
+
+    .label-alt {
+      display: block;
+      font-size: 7.5px;
+      font-weight: 400;
+      opacity: 0.85;
+    }
   </style>
 </head>
 <body>
@@ -29,6 +47,7 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="js/squaremap-crs.js"></script>
+  <script src="js/town-geometry.js"></script>
   <script src="js/town-borders.js"></script>
   <script src="js/main.js"></script>
 </body>
