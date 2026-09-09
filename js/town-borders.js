@@ -17,7 +17,7 @@
 //                         explicit world coordinates, with optional
 //                         `otherNames` shown smaller underneath).
 const BORDER_STYLE = {
-  color: "#7a7a7a",
+  color: "#b5b5b5",
   weight: 2.5,
   opacity: 1,
   fill: false,
